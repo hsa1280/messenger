@@ -81,8 +81,47 @@ public class MessageResource {
 	
 	@GET
 	@Path("/{messageId}")
-	public Message getMessage(@PathParam("messageId") long id) {
-		return messageService.getMessage(id);
+	public Message getMessage(@PathParam("messageId") long id, @Context UriInfo uriInfo) {
+		Message message = messageService.getMessage(id);
+		message.addLink(getUriForSelf(uriInfo, message), "self");
+		message.addLink(getUriForProfile(uriInfo, message), "profile");
+		message.addLink(getUriForComment(uriInfo, message), "comments");
+		
+		return message;
+	}
+	
+	
+	// this is used to get link for subresouce
+	private String getUriForComment(UriInfo uriInfo, Message message) {
+		String url = uriInfo.getBaseUriBuilder()
+				.path(MessageResource.class)
+				.path(MessageResource.class, "getCommentResource")
+				.path(CommentResource.class)
+				.resolveTemplate("messageId", message.getId())
+				.build()
+				.toString();
+		
+		return url;
+	}
+	
+	private String getUriForProfile(UriInfo uriInfo, Message message) {
+		String url = uriInfo.getBaseUriBuilder()
+				.path(ProfileResource.class)
+				.path(message.getAuthor())
+				.build()
+				.toString();
+		
+		return url;
+	}
+	
+	private String getUriForSelf(UriInfo uriInfo, Message message) {
+		String url = uriInfo.getBaseUriBuilder()
+				.path(MessageResource.class)
+				.path(Long.toString(message.getId()))
+				.build()
+				.toString();
+		
+		return url;
 	}
 	
 	// No http methods here so this path is generic for all http methods
