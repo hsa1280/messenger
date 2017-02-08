@@ -1,4 +1,5 @@
 This is a project for learning Restful API using JAX-RS.
+If getting errors, try to change the Accept in the head.
 
 How to run the app:
 1. Deploy the app to Tomcat and start the Tomcat server

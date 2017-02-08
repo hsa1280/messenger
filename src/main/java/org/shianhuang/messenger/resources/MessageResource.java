@@ -23,7 +23,7 @@ import org.shianhuang.messenger.service.MessageService;
 
 
 @Path("/messages")
-@Consumes(value = {MediaType.APPLICATION_JSON, MediaType.TEXT_XML})
+@Consumes(value = {MediaType.APPLICATION_JSON})
 @Produces(value = {MediaType.APPLICATION_JSON})
 public class MessageResource {
 	
@@ -85,6 +85,12 @@ public class MessageResource {
 		return messageService.getMessage(id);
 	}
 	
+	// No http methods here so this path is generic for all http methods
+	/* 
+	 * Here, instead of calling getCommentResource(), Jersey knows that the return
+	 * type is another resource, so it goes to CommentResource to execute methods in
+	 * CommentResource, this is subresouce
+	*/
 	@Path("/{messageId}/comments")
 	public CommentResource getCommentResource() {
 		return new CommentResource();
